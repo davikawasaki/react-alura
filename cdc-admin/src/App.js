@@ -1,9 +1,28 @@
 import React, { Component } from 'react';
 import './css/pure-min.css';
 import './css/side-menu.css';
+import $ from 'jquery';
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {list: []};
+  }
+
+  componentDidMount() {
+    console.log("didMount");
+    $.ajax({
+      url: "http://localhost:8080/api/autores",
+      dataType: 'json',
+      success: function(ans) {
+        console.log("Received async answer");
+        this.setState({list:ans});
+      }.bind(this)
+    });
+  }
+
   render() {
+    console.log("render");
     return (
       <div id="layout">
         <a href="#menu" id="menuLink" className="menu-link">
@@ -56,10 +75,16 @@ class App extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Alberto</td>                
-                    <td>alberto.souza@caelum.com.br</td>                
-                  </tr>
+                  {
+                    this.state.list.map(function(author) {
+                      return (
+                        <tr key={author.id}>
+                          <td>{author.name}</td>
+                          <td>{author.email}</td>
+                        </tr>
+                      );
+                    })
+                  }
                 </tbody>
               </table> 
             </div>             
