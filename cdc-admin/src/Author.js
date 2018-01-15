@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import CustomizedInput from './components/CustomizedInput';
 import CustomizedSubmitButton from './components/CustomizedSubmitButton';
+import PubSub from 'pubsub-js';
+import ErrorHandler from './ErrorHandler';
 
 class AuthorForm extends Component {
     constructor() {
@@ -22,11 +24,17 @@ class AuthorForm extends Component {
             type: 'post',
             data: JSON.stringify({nome: this.state.name, email: this.state.email, senha: this.state.password}),
             success: function(newList) {
-                // this.setState({list: newList});
-                this.props.callbackUpdateList(newList);
+                // Callback from high-order component
+                // this.props.callbackUpdateList(newList);
+                PubSub.publish('update-authors-list', newList);
+                this.setState({name: '', email: '', password: ''});
             }.bind(this),
             error: function(err) {
+                if(err.status === 400) new ErrorHandler().publishErrors(err.responseJSON);
                 console.error("Error at sending new author");
+            },
+            beforeSend: function() {
+                PubSub.publish('clear-errors', {});
             }
         });
     }
@@ -49,9 +57,9 @@ class AuthorForm extends Component {
               {/* Synthetic event: map DOM real events
                   @see: https://reactjs.org/docs/events.html */}
               <form className="pure-form pure-form-aligned" onSubmit={this.sendForm} method="post">
-                <CustomizedInput id="name" type="text" name="name" value={this.state.name} onChange={this.setName} label="Nome"/>
+                <CustomizedInput id="name" type="text" name="nome" value={this.state.name} onChange={this.setName} label="Nome"/>
                 <CustomizedInput id="email" type="email" name="email" value={this.state.email} onChange={this.setEmail} label="Email"/>
-                <CustomizedInput id="password" type="password" name="password" value={this.state.password} onChange={this.setPassword} label="Senha"/>
+                <CustomizedInput id="password" type="password" name="senha" value={this.state.password} onChange={this.setPassword} label="Senha"/>
                 {/* <div className="pure-control-group">
                   <label htmlFor="nome">Nome</label> 
                   <input id="nome" type="text" name="nome" value=""  />                  
@@ -118,9 +126,13 @@ export default class AuthorBox extends Component {
             dataType: 'json',
             success: function(ans) {
                 console.log("Received async answer");
-                this.setState({list:ans});
+                this.setState({list: ans});
             }.bind(this)
         });
+
+        PubSub.subscribe('update-authors-list', function(topic, newList) {
+            this.setState({list: newList});
+        }.bind(this));
     }
 
     updateList(newList) {
@@ -130,7 +142,9 @@ export default class AuthorBox extends Component {
     render() {
         return (
           <div>
-            <AuthorForm callbackUpdateList={this.updateList} />
+            {/* High-order component with callback method */}
+            {/* <AuthorForm callbackUpdateList={this.updateList} /> */}
+            <AuthorForm />
             <AuthorsTable list={this.state.list} />
           </div>
         );
