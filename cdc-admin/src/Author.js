@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import CustomizedInput from './components/CustomizedInput';
 import CustomizedSubmitButton from './components/CustomizedSubmitButton';
+// Publisher-Subscriber - Act as Middleware
+// @see: https://github.com/mroderick/PubSubJS
 import PubSub from 'pubsub-js';
 import ErrorHandler from './ErrorHandler';
 
@@ -110,7 +112,7 @@ class AuthorsTable extends Component {
 
 /**
  * High-Order Component
- * Encapsulate state, isolating interface from inner components.
+ * Wrapper that encapsulate shared state, isolating interface from inner components.
  * @see: https://medium.com/@franleplant/react-higher-order-components-in-depth-cf9032ee6c3e
  */
 export default class AuthorBox extends Component {
