@@ -12,9 +12,9 @@ class AuthorForm extends Component {
         super();
         this.state = {name: '', email: '', password: ''};
         this.sendForm = this.sendForm.bind(this);
-        this.setName = this.setName.bind(this);
-        this.setEmail = this.setEmail.bind(this);
-        this.setPassword = this.setPassword.bind(this);
+        // this.setName = this.setName.bind(this);
+        // this.setEmail = this.setEmail.bind(this);
+        // this.setPassword = this.setPassword.bind(this);
     }
 
     sendForm(event) {
@@ -41,16 +41,22 @@ class AuthorForm extends Component {
         });
     }
 
-    setName(event) {
-        this.setState({name: event.target.value});
-    }
+    // setName(event) {
+    //     this.setState({name: event.target.value});
+    // }
 
-    setEmail(event) {
-        this.setState({email: event.target.value});
-    }
+    // setEmail(event) {
+    //     this.setState({email: event.target.value});
+    // }
 
-    setPassword(event) {
-        this.setState({password: event.target.value});
+    // setPassword(event) {
+    //     this.setState({password: event.target.value});
+    // }
+
+    saveInputUpdate(inputName, event) {
+        let changedField = {};
+        changedField[inputName] = event.target.value;
+        this.setState(changedField);
     }
 
     render() {
@@ -59,9 +65,9 @@ class AuthorForm extends Component {
               {/* Synthetic event: map DOM real events
                   @see: https://reactjs.org/docs/events.html */}
               <form className="pure-form pure-form-aligned" onSubmit={this.sendForm} method="post">
-                <CustomizedInput id="name" type="text" name="nome" value={this.state.name} onChange={this.setName} label="Nome"/>
-                <CustomizedInput id="email" type="email" name="email" value={this.state.email} onChange={this.setEmail} label="Email"/>
-                <CustomizedInput id="password" type="password" name="senha" value={this.state.password} onChange={this.setPassword} label="Senha"/>
+                <CustomizedInput id="name" type="text" name="nome" value={this.state.name} onChange={this.saveInputUpdate.bind(this,'name')} label="Nome"/>
+                <CustomizedInput id="email" type="email" name="email" value={this.state.email} onChange={this.saveInputUpdate.bind(this,'email')} label="Email"/>
+                <CustomizedInput id="password" type="password" name="senha" value={this.state.password} onChange={this.saveInputUpdate.bind(this,'password')} label="Senha"/>
                 {/* <div className="pure-control-group">
                   <label htmlFor="nome">Nome</label> 
                   <input id="nome" type="text" name="nome" value=""  />                  

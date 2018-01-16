@@ -10,9 +10,9 @@ class BookForm extends Component {
         super();
         this.state = {title: '', price: '', authorId: ''};
         this.sendForm = this.sendForm.bind(this);
-        this.setTitle = this.setTitle.bind(this);
-        this.setPrice = this.setPrice.bind(this);
-        this.setAuthorId = this.setAuthorId.bind(this);
+        // this.setTitle = this.setTitle.bind(this);
+        // this.setPrice = this.setPrice.bind(this);
+        // this.setAuthorId = this.setAuthorId.bind(this);
     }
 
     sendForm(event) {
@@ -39,17 +39,23 @@ class BookForm extends Component {
         });
     }
 
-    setTitle(event) {
-        this.setState({title: event.target.value});
+    saveInputUpdate(inputName, event) {
+        let changedField = {};
+        changedField[inputName] = event.target.value;
+        this.setState(changedField);
     }
 
-    setPrice(event) {
-        this.setState({price: event.target.value});
-    }
+    // setTitle(event) {
+    //     this.setState({title: event.target.value});
+    // }
 
-    setAuthorId(event) {
-        this.setState({authorId: event.target.value});
-    }
+    // setPrice(event) {
+    //     this.setState({price: event.target.value});
+    // }
+
+    // setAuthorId(event) {
+    //     this.setState({authorId: event.target.value});
+    // }
 
     render() {
         return (
@@ -57,11 +63,11 @@ class BookForm extends Component {
               {/* Synthetic event: map DOM real events
                   @see: https://reactjs.org/docs/events.html */}
               <form className="pure-form pure-form-aligned" onSubmit={this.sendForm} method="post">
-                <CustomizedInput id="title" type="text" name="titulo" value={this.state.title} onChange={this.setTitle} label="Título"/>
-                <CustomizedInput id="price" type="text" name="preco" value={this.state.price} onChange={this.setPrice} label="Preço"/>
+                <CustomizedInput id="title" type="text" name="titulo" value={this.state.title} onChange={this.saveInputUpdate.bind(this,'title')} label="Título"/>
+                <CustomizedInput id="price" type="text" name="preco" value={this.state.price} onChange={this.saveInputUpdate.bind(this,'price')} label="Preço"/>
                 <div className="pure-control-group">
                     <label htmlFor="autorId">Autor</label> 
-                    <select value={this.state.authorId} name="autorId" id="autorId" onChange={this.setAuthorId}>
+                    <select value={this.state.authorId} name="autorId" id="autorId" onChange={this.saveInputUpdate.bind(this,'authorId')}>
                         <option value="">Selecione Autor</option>
                         {
                             this.props.authors.map(function(author) {
