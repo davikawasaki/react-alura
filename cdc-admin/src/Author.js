@@ -144,10 +144,15 @@ export default class AuthorBox extends Component {
     render() {
         return (
           <div>
-            {/* High-order component with callback method */}
-            {/* <AuthorForm callbackUpdateList={this.updateList} /> */}
-            <AuthorForm />
-            <AuthorsTable list={this.state.list} />
+            <div className="header">
+                <h1>Cadastro de autores</h1>
+            </div>
+            <div className="content" id="content">     
+                {/* High-order component with callback method */}
+                {/* <AuthorForm callbackUpdateList={this.updateList} /> */}
+                <AuthorForm />
+                <AuthorsTable list={this.state.list} />
+            </div>
           </div>
         );
     }
