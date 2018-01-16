@@ -1,0 +1,18 @@
+{
+  "name": "cdc-admin-no-cli",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {},
+  "scripts": {
+    "start": "./node_modules/.bin/watchify src/ -o src/generated/bundle.js -t [babelify --presets [ es2015 react ] ] -t [browserify-css] --debug"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babelify": "^8.0.0",
+    "browserify": "^15.2.0",
+    "browserify-css": "^0.14.0",
+    "watchify": "^3.9.0"
+  }
+}
