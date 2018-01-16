@@ -1,4 +1,4 @@
-# Alura Course - Parte 1
+# Alura Course - Part 1
 
 This repository covers code from [First React Alura Course](https://cursos.alura.com.br/course/react).
 
