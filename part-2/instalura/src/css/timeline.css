@@ -27,6 +27,7 @@ html,body {
     flex-basis: 100%;
     background: #fff;
     backface-visibility: hidden;
+    z-index: 1;
   }
   
   .header-logo {
