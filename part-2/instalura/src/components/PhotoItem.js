@@ -17,45 +17,38 @@ class PhotoUpdates extends Component {
 
 class PhotoInfo extends Component {
     render() {
-        return (
-            <div className="foto-in fo">
-              <div className="foto-info-likes">
+      let likers = '';
+      if(this.props.photo.likers.length > 0) likers = 'curtiram';
+      return (
+          <div className="foto-in fo">
+            <div className="foto-info-likes">
+              {
+                this.props.photo.likers.map(liker => {
+                  return (<a key={liker.id} href="#">{liker.login},</a>)
+                })
+              }
+              {likers}
+            </div>
 
-                <a href="#">
-                  alots_ssa
-                </a>
+            <p className="foto-info-legenda">
+              <a className="foto-info-autor">autor </a>
+              {this.props.photo.comentario}
+            </p>
 
-                ,
-
-                <a href="#">
-                  rafael_rollo
-                </a> 
-
-                 curtiram
-
-              </div>
-
-              <p className="foto-info-legenda">
-                <a className="foto-info-autor">autor </a>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est, illo?
-              </p>
-
-              <ul className="foto-info-comentarios">
-                <li className="comentario">
-                  <a className="foto-info-autor">seguidor </a>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem ad, molestiae.
-                </li>
-                <li className="comentario">
-                  <a className="foto-info-autor">seguidor </a>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt cumque earum molestias voluptatem modi nihil sit magnam ratione eveniet distinctio magni error asperiores dignissimos tempora expedita, laborum ex soluta hic maiores veritatis deserunt.
-                </li>
-                <li className="comentario">
-                  <a className="foto-info-autor">seguidor </a>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum laudantium quae ab fuga odio delectus maiores voluptatibus sit commodi quidem.
-                </li>
-              </ul>
-            </div>            
-        );
+            <ul className="foto-info-comentarios">
+              {
+                this.props.photo.comentarios.map(comentario => {
+                  return (
+                    <li key={comentario.id} className="comentario">
+                      <a className="foto-info-autor">{comentario.login}</a>
+                      {comentario.texto}
+                    </li>
+                  );
+                })
+              }
+            </ul>
+          </div>            
+      );
     }
 }
 
@@ -64,14 +57,14 @@ class PhotoHeader extends Component {
         return (
             <header className="foto-header">
               <figure className="foto-usuario">
-                <img src="https://instagram.fcgh10-1.fna.fbcdn.net/t51.2885-19/11199408_569104449895751_1837574990_a.jpg" alt="foto do usuario"/>
+                <img src={this.props.photo.urlPerfil} alt="foto do usuario"/>
                 <figcaption className="foto-usuario">
                   <a href="#">
-                    alots
+                    {this.props.photo.loginUsuario}
                   </a>  
                 </figcaption>
               </figure>
-              <time className="foto-data">03/10/2016 20:13</time>
+              <time className="foto-data">{this.props.photo.horario}</time>
             </header>            
         );
     }
@@ -81,9 +74,9 @@ export default class PhotoItem extends Component {
     render() {
         return (
           <div className="foto">
-            <PhotoHeader/>
-            <img alt="foto" className="foto-src" src="https://instagram.fcgh10-1.fna.fbcdn.net/t51.2885-15/e35/14482111_1635089460122802_8984023070045896704_n.jpg?ig_cache_key=MTM1MzEzNjM4NzAxMjIwODUyMw%3D%3D.2"/>
-            <PhotoInfo/>
+            <PhotoHeader photo={this.props.photo}/>
+            <img alt="foto" className="foto-src" src={this.props.photo.urlFoto}/>
+            <PhotoInfo photo={this.props.photo}/>
             <PhotoUpdates/>
           </div>            
         );
