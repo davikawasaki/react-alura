@@ -10,13 +10,17 @@ import './css/reset.css';
 import './css/timeline.css';
 import './css/login.css';
 
-function isAuthenticated(nextState, replace) {
-    return localStorage.getItem('auth-token') === null;
+function isAuthenticated() {
+    return localStorage.getItem('auth-token') !== null;
 
     // React Router V3 version, which has location.query.msg
     // if(localStorage.getItem('auth-token') === null){
     //     replace('/?msg=você precisa estar logado para acessar o endereço');
     // }
+}
+
+function isTimelinePublic(login) {
+    return login !== undefined;
 }
 
 ReactDOM.render(
@@ -25,14 +29,20 @@ ReactDOM.render(
             <Route exact path="/" component={Login} />
             {/* React Router V3 Version */}
             {/* <Route path="/timeline" component={App} onEnter={isAuthenticated}/> */}
+            {/* <Route path="/timeline(/:login)" component={App} onEnter={isAuthenticated}/> */}
 
             {/* React Router V4 Version */}
             {/* @see: https://reacttraining.com/react-router/web/example/auth-workflow */}
-            <Route path="/timeline" render={() => (
-                isAuthenticated() ? (
-                    <App />
+            {/* @see: https://stackoverflow.com/questions/35604617/react-router-with-optional-path-parameter */}
+            <Route path="/timeline/:login?" render={(props) => (
+                isTimelinePublic(props.match.params.login) ?
+                    (<App login={props.match.params.login} />
                 ) : (
-                    <Redirect to="/?msg=Você precisa estar logado para acessar o endereço!" />
+                    isAuthenticated() ? (
+                        <App />
+                    ) : (
+                        <Redirect to="/?msg=Você precisa estar logado para acessar o endereço!" />
+                    )
                 )
             )} />
             <Route path="/logout" component={Logout} />
