@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import {BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
-import Timeline from './components/Timeline';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import './css/reset.css';
