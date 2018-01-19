@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import PhotoItem from './PhotoItem';
+import PubSub from 'pubsub-js';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-export default class Timeline extends Component {
+class Timeline extends Component {
 
     constructor(props) {       
         super(props);        
@@ -22,20 +25,33 @@ export default class Timeline extends Component {
         this.loadPhotos();
     }
 
-    componentWillReceiveProps(nextProps) {          
-        if(nextProps.login !== undefined) {
-            this.login = nextProps.login;
-            this.loadPhotos();           
-        }
+    componentWillMount() {
+        PubSub.subscribe('timeline-search', (topic, newPhotos) => {
+            // this.setState({photosList: newPhotos.photos});
+            this.props.history.push(`/timeline/${newPhotos.login}`);
+        });
+    }
+
+    componentWillReceiveProps(nextProps) {        
+        // if(nextProps.login !== undefined) this.login = nextProps.login;
+        this.login = nextProps.login;
+        this.loadPhotos();
     }
 
     render() {
         return (
         <div className="fotos container">
-            {
-                this.state.photosList.map(photo => <PhotoItem key={photo.id} photo={photo}/>)
-            }
+            <ReactCSSTransitionGroup
+                transitionName="timeline"
+                transitionEnterTimeout={500}
+                transitionLeaveTimeout={300}>
+                {
+                    this.state.photosList.map(photo => <PhotoItem key={photo.id} photo={photo}/>)
+                }
+            </ReactCSSTransitionGroup>
         </div>            
         );
     }
 }
+
+export default withRouter(Timeline);
