@@ -45,6 +45,13 @@ ReactDOM.render(
                 )
             )} />
             <Route path="/logout" component={Logout} />
+            <Route render={(props) => (
+                isAuthenticated() ? (
+                    <Redirect to="/timeline" />
+                ) : (
+                    <Redirect to="/?msg=Desculpe, essa página não existe!" />
+                )
+            )} />
         </Switch>
     </Router>),
     document.getElementById('root')
