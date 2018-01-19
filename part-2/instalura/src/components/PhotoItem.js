@@ -9,12 +9,12 @@ class PhotoUpdates extends Component {
     this.state = {liked: this.props.photo.likeada};    
   }
 
-  like(event) {
+  toLike(event) {
     event.preventDefault();
     fetch(`http://localhost:8080/api/fotos/${this.props.photo.id}/like?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`, {method: 'POST'})
       .then(response => {
         if(response.ok) return response.json();
-        else throw new Error("Não foi possível realizar o like da foto");
+        else throw new Error("Não foi possível realizar o like da foto!");
       })
       .then(liker => {
         this.setState({liked: !this.state.liked});
@@ -23,13 +23,35 @@ class PhotoUpdates extends Component {
         PubSub.publish('update-liker', {photoId: this.props.photo.id, liker});
       });
   }
+
+  toComment(event) {
+    event.preventDefault();
+
+    const requestInfo = {
+      method: 'POST',
+      body: JSON.stringify({texto: this.comment.value}),
+      headers: new Headers({
+        'Content-type': 'application/json'
+      })
+    };
+
+    fetch(`http://localhost:8080/api/fotos/${this.props.photo.id}/comment?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`, requestInfo)
+      .then(response => {
+        if(response.ok) return response.json();
+        else throw new Error("Não foi possível comentar nessa foto!");
+      })
+      .then(newComment => {
+        PubSub.publish('new-comments', {photoId: this.props.photo.id, newComment});
+        this.comment.value = '';
+      });
+  }
   
   render() {
       return (
           <section className="fotoAtualizacoes">
-            <a onClick={this.like.bind(this)} className={this.state.liked ? 'fotoAtualizacoes-like-ativo' : 'fotoAtualizacoes-like'}>Likar</a>
-            <form className="fotoAtualizacoes-form">
-              <input type="text" placeholder="Adicione um comentário..." className="fotoAtualizacoes-form-campo"/>
+            <a onClick={this.toLike.bind(this)} className={this.state.liked ? 'fotoAtualizacoes-like-ativo' : 'fotoAtualizacoes-like'}>Likar</a>
+            <form className="fotoAtualizacoes-form" onSubmit={this.toComment.bind(this)}>
+              <input type="text" placeholder="Adicione um comentário..." className="fotoAtualizacoes-form-campo" ref={input => this.comment = input}/>
               <input type="submit" value="Comentar!" className="fotoAtualizacoes-form-submit"/>
             </form>
 
@@ -42,7 +64,7 @@ class PhotoInfo extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {likers: this.props.photo.likers, label: ''};
+    this.state = {likers: this.props.photo.likers, comments: this.props.photo.comentarios, label: ''};
   }
 
   changeQuantityLabel() {
@@ -63,8 +85,14 @@ class PhotoInfo extends Component {
           this.setState({likers: newLikers});
         }
       }
-
       this.changeQuantityLabel();
+    });
+
+    PubSub.subscribe('new-comments', (topic, commentInfo) => {      
+      if(this.props.photo.id === commentInfo.photoId) {
+        const newComments = this.state.comments.concat(commentInfo.newComment);
+        this.setState({comments: newComments});
+      }
     });
   }
 
@@ -91,11 +119,11 @@ class PhotoInfo extends Component {
 
           <ul className="foto-info-comentarios">
             {
-              this.props.photo.comentarios.map(comentario => {
+              this.state.comments.map(comentario => {
                 return (
                   <li key={comentario.id} className="comentario">
                     <Link to={`/timeline/${comentario.login}`} className="foto-info-autor">{comentario.login}</Link>
-                    {comentario.texto}
+                    <span> {comentario.texto}</span>
                   </li>
                 );
               })
