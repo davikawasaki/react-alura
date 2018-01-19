@@ -20,6 +20,14 @@ This repository covers code from three [React courses](https://cursos.alura.com.
 
 8\. [React Forms](https://reactjs.org/docs/forms.html)
 
+9\. [Property Shorthanded](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer)
+
+10\. [React Router with Optional Parameter](https://stackoverflow.com/questions/35604617/react-router-with-optional-path-parameter)
+
+11\. [React Animation Add-Ons](https://reactjs.org/docs/animation.html)
+
+12\. [Presentational and Container Components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0)
+
 ## REFERENCES: Courses links from Alura
 
 [Curso React parte 1: componentes reutilizáveis para sua webapp](https://cursos.alura.com.br/course/react)
